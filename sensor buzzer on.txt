@@ -12,9 +12,6 @@ HPMA115C0 hpma(Serial1);
 // Initialize I2C LCD (address 0x27 or 0x3F based on your I2C module)
 LiquidCrystal_I2C lcd(0x27, 16, 2); // Adjust the I2C address (0x27 or 0x3F) as per your display
 
-// Pin for buzzer
-const int buzzerPin = 8;
-
 void setup() {
   Serial.begin(9600);        // Initialize serial monitor
   Serial1.begin(9600);       // Initialize UART communication with sensor
@@ -32,10 +29,6 @@ void setup() {
   lcd.print("Dust Sensor Init");
   delay(2000);
   lcd.clear();
-
-  // Initialize buzzer pin
-  pinMode(buzzerPin, OUTPUT);
-  digitalWrite(buzzerPin, LOW); // Turn off buzzer initially
 }
 
 void loop() {
@@ -71,27 +64,18 @@ void loop() {
   }
 
   // Print particle data on Serial Monitor
-  Serial.println("PM1.0: " + String(pm1_0) + " ug/m3");
-  Serial.println("PM2.5: " + String(pm2_5) + " ug/m3");
-  Serial.println("PM4.0: " + String(pm4_0) + " ug/m3");
-  Serial.println("PM10: " + String(pm10) + " ug/m3");
+  Serial.println("PM 1.0: " + String(pm1_0) + " ug/m3");
+  Serial.println("PM 2.5: " + String(pm2_5) + " ug/m3");
+  Serial.println("PM 4.0: " + String(pm4_0) + " ug/m3");
+  Serial.println("PM 10: " + String(pm10) + " ug/m3");
   Serial.println(); // Blank line for readability
 
-  // Clear LCD and print particle data on I2C LCD display
-  lcd.clear();
+  // Print particle data on I2C LCD display
   lcd.setCursor(0, 0); // Line 1
-  lcd.print("P1:" + String(pm1_0) + " P2.5:" + String(pm2_5));
+  lcd.print("PM1.0:" + String(pm1_0) + " PM2.5:" + String(pm2_5));
   
   lcd.setCursor(0, 1); // Line 2
-  lcd.print("P4:" + String(pm4_0) + " P10:" + String(pm10));
-
-  // Check if PM2.5 is greater than 5 and trigger buzzer if true
-  if (pm2_5 > 5) {
-    Serial.println("Warning: PM2.5 is above 5! Activating buzzer.");
-    digitalWrite(buzzerPin, HIGH); // Turn on the buzzer
- 444444444444444444444444444   delay(1000); // Buzzer beeps for 1 second
-    digitalWrite(buzzerPin, LOW); // Turn off the buzzer
-  }
+  lcd.print("PM4.0:" + String(pm4_0) + " PM10:" + String(pm10));
 
   delay(3000); // Wait before the next reading
 }
